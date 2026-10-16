@@ -63,8 +63,12 @@ describe("UCSBOrganizationForm", () => {
     expect(
       await screen.findByText("Organization code is required."),
     ).toBeInTheDocument();
-    expect(screen.getByText("Short organization name is required.")).toBeInTheDocument();
-    expect(screen.getByText("Organization name is required.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Short organization name is required."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Organization name is required."),
+    ).toBeInTheDocument();
     expect(submitAction).not.toHaveBeenCalled();
 
     fireEvent.change(screen.getByLabelText("Organization Code"), {

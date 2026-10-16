@@ -50,7 +50,9 @@ describe("UCSBOrganizationCreatePage", () => {
 
     expect(screen.getByText("Create New UCSBOrganization")).toBeInTheDocument();
     expect(screen.getByLabelText("Organization Code")).toBeInTheDocument();
-    expect(screen.getByLabelText("Short Organization Name")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Short Organization Name"),
+    ).toBeInTheDocument();
     expect(screen.getByLabelText("Organization Name")).toBeInTheDocument();
     expect(screen.getByLabelText("Inactive")).toBeInTheDocument();
   });

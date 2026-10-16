@@ -53,7 +53,9 @@ describe("UCSBOrganizationIndexPage", () => {
     expect(
       screen.getByTestId(`${testId}-cell-row-2-col-orgCode`),
     ).toHaveTextContent("ORG003");
-    expect(screen.queryByText("Create UCSBOrganization")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Create UCSBOrganization"),
+    ).not.toBeInTheDocument();
     expect(
       screen.queryByTestId(`${testId}-cell-row-0-col-Edit-button`),
     ).not.toBeInTheDocument();
@@ -81,9 +83,7 @@ describe("UCSBOrganizationIndexPage", () => {
       screen.getByTestId(`${testId}-cell-row-1-col-Delete-button`),
     ).toBeInTheDocument();
 
-    fireEvent.click(
-      screen.getByTestId(`${testId}-cell-row-1-col-Edit-button`),
-    );
+    fireEvent.click(screen.getByTestId(`${testId}-cell-row-1-col-Edit-button`));
     expect(mockedNavigate).toHaveBeenCalledWith(
       "/ucsborganization/edit/ORG002",
     );

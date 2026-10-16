@@ -202,10 +202,9 @@ describe("AppNavbar tests", () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByRole("link", { name: "UCSBOrganization" })).toHaveAttribute(
-      "href",
-      "/ucsborganization",
-    );
+    expect(
+      screen.getByRole("link", { name: "UCSBOrganization" }),
+    ).toHaveAttribute("href", "/ucsborganization");
   });
 
   test("Restaurant and UCSBDates links do NOT show when not logged in", async () => {
