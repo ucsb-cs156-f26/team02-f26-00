@@ -53,7 +53,7 @@ public class UCSBOrganizationController extends ApiController {
       @Parameter(description = "Organization code to look up") @RequestParam String orgCode) {
     return ucsbOrganizationRepository
         .findById(orgCode)
-        .orElseThrow(() -> new EntityNotFoundException("id %s not found".formatted(orgCode)));
+        .orElseThrow(() -> new EntityNotFoundException(UCSBOrganization.class, orgCode));
   }
 
   /**
@@ -70,8 +70,7 @@ public class UCSBOrganizationController extends ApiController {
     UCSBOrganization organization =
         ucsbOrganizationRepository
             .findById(orgCode)
-            .orElseThrow(
-                () -> new EntityNotFoundException("record %s not found".formatted(orgCode)));
+            .orElseThrow(() -> new EntityNotFoundException(UCSBOrganization.class, orgCode));
     ucsbOrganizationRepository.delete(organization);
     return genericMessage("record %s deleted".formatted(orgCode));
   }
@@ -92,7 +91,7 @@ public class UCSBOrganizationController extends ApiController {
     UCSBOrganization organization =
         ucsbOrganizationRepository
             .findById(orgCode)
-            .orElseThrow(() -> new EntityNotFoundException("id %s not found".formatted(orgCode)));
+            .orElseThrow(() -> new EntityNotFoundException(UCSBOrganization.class, orgCode));
     organization.setOrgTranslationShort(incoming.getOrgTranslationShort());
     organization.setOrgTranslation(incoming.getOrgTranslation());
     organization.setInactive(incoming.getInactive());

@@ -237,7 +237,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
         .perform(get("/api/UCSBOrganization").param("orgCode", "123"))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.type").value("EntityNotFoundException"))
-        .andExpect(jsonPath("$.message").value("id 123 not found"));
+        .andExpect(jsonPath("$.message").value("UCSBOrganization with id 123 not found"));
     verify(ucsbOrganizationRepository).findById("123");
     verifyNoMoreInteractions(ucsbOrganizationRepository);
   }
@@ -263,7 +263,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
         .perform(delete("/api/UCSBOrganization").param("orgCode", "123").with(csrf()))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.type").value("EntityNotFoundException"))
-        .andExpect(jsonPath("$.message").value("record 123 not found"));
+        .andExpect(jsonPath("$.message").value("UCSBOrganization with id 123 not found"));
     verify(ucsbOrganizationRepository).findById("123");
     verifyNoMoreInteractions(ucsbOrganizationRepository);
   }
@@ -301,7 +301,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
         .perform(organizationPut().with(csrf()))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.type").value("EntityNotFoundException"))
-        .andExpect(jsonPath("$.message").value("id SKY not found"));
+        .andExpect(jsonPath("$.message").value("UCSBOrganization with id SKY not found"));
     verify(ucsbOrganizationRepository).findById("SKY");
     verifyNoMoreInteractions(ucsbOrganizationRepository);
   }
