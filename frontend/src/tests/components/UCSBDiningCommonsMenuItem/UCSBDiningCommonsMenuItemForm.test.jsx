@@ -128,9 +128,11 @@ describe("UCSBDiningCommonsMenuItemForm tests", () => {
       fireEvent.change(codeInput, { target: { value: badCode } });
       fireEvent.click(submitButton);
 
-      await screen.findByText(
-        /Dining Commons Code must be lowercase letters separated by dashes/,
-      );
+      expect(
+        await screen.findByText(
+          /Dining Commons Code must be lowercase letters separated by dashes/,
+        ),
+      ).toBeInTheDocument();
     },
   );
 
