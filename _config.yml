@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-f26/team02-f26-00
 owner: ucsb-cs156-f26
 repo_name: team02-f26-00
-pull_requests: []
+pull_requests: [{"author":{"id":"MDQ6VXNlcjUzMjM2OTYx","is_bot":false,"login":"Wendy192837","name":"Wendy Song"},"headRefName":"ws-helprequest-frontend-pages","number":66,"title":"added frontend pages for helprequest","url":"https://github.com/ucsb-cs156-f26/team02-f26-00/pull/66"}]
