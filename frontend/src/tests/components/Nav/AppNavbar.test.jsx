@@ -193,6 +193,20 @@ describe("AppNavbar tests", () => {
     expect(link.getAttribute("href")).toBe("/restaurants");
   });
 
+  test("renders the UCSBOrganization link for logged-in users", () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AppNavbar currentUser={currentUserFixtures.userOnly} />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+
+    expect(
+      screen.getByRole("link", { name: "UCSBOrganization" }),
+    ).toHaveAttribute("href", "/ucsborganization");
+  });
+
   test("renders the UCSBDiningCommonsMenuItem link correctly", async () => {
     const currentUser = currentUserFixtures.userOnly;
     const systemInfo = systemInfoFixtures.showingBoth;
@@ -236,6 +250,7 @@ describe("AppNavbar tests", () => {
 
     expect(screen.queryByText("Restaurants")).not.toBeInTheDocument();
     expect(screen.queryByText("UCSBDates")).not.toBeInTheDocument();
+    expect(screen.queryByText("UCSBOrganization")).not.toBeInTheDocument();
     expect(
       screen.queryByText("UCSBDiningCommonsMenuItem"),
     ).not.toBeInTheDocument();
