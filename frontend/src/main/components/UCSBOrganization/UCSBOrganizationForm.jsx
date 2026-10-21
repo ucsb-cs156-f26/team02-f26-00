@@ -12,13 +12,13 @@ function UCSBOrganizationForm({
     formState: { errors },
     handleSubmit,
   } = useForm({
-    defaultValues: initialContents || { inactive: false },
+    defaultValues: initialContents,
   });
   const navigate = useNavigate();
   const testIdPrefix = "UCSBOrganizationForm";
 
   const requiredText = (label) => ({
-    validate: (value) => value?.trim().length > 0 || `${label} is required.`,
+    validate: (value) => value.trim().length > 0 || `${label} is required.`,
     maxLength: {
       value: 255,
       message: `${label} must be 255 characters or fewer.`,

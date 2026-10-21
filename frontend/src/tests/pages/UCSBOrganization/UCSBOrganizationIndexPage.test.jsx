@@ -79,6 +79,9 @@ describe("UCSBOrganizationIndexPage", () => {
       "href",
       "/ucsborganization/create",
     );
+    expect(screen.getByText("Create UCSBOrganization")).toHaveStyle({
+      float: "right",
+    });
     expect(
       screen.getByTestId(`${testId}-cell-row-1-col-Delete-button`),
     ).toBeInTheDocument();

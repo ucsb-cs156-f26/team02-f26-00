@@ -14,7 +14,6 @@ export default function UCSBOrganizationEditPage({
   const { data: organization } = useBackend(
     ["/api/UCSBOrganization", orgCode],
     {
-      method: "GET",
       url: "/api/UCSBOrganization",
       params: { orgCode },
     },

@@ -30,6 +30,22 @@ describe("UCSBOrganizationForm", () => {
     expect(screen.getByLabelText("Organization Name")).toHaveValue("");
     expect(screen.getByLabelText("Inactive")).not.toBeChecked();
     expect(screen.getByRole("button", { name: "Create" })).toBeInTheDocument();
+    for (const field of [
+      "orgCode",
+      "orgTranslationShort",
+      "orgTranslation",
+      "inactive",
+    ]) {
+      expect(
+        screen.getByTestId(`UCSBOrganizationForm-${field}`),
+      ).toBeInTheDocument();
+    }
+    expect(screen.getByTestId("UCSBOrganizationForm-submit")).toHaveTextContent(
+      "Create",
+    );
+    expect(screen.getByTestId("UCSBOrganizationForm-cancel")).toHaveTextContent(
+      "Cancel",
+    );
   });
 
   test("prefills an existing organization and keeps its code read-only", () => {

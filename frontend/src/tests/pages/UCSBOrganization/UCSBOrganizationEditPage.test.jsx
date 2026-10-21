@@ -8,9 +8,15 @@ import { ucsbOrganizationFixtures } from "fixtures/ucsbOrganizationFixtures";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
 
-const renderPage = () =>
+const mockToast = vi.fn();
+vi.mock("react-toastify", async (importOriginal) => ({
+  ...(await importOriginal()),
+  toast: (message) => mockToast(message),
+}));
+
+const renderPage = (queryClient = new QueryClient()) =>
   render(
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryClientProvider client={queryClient}>
       <MemoryRouter
         initialEntries={["/previous", "/ucsborganization/edit/ORG001"]}
         initialIndex={1}
@@ -34,6 +40,7 @@ describe("UCSBOrganizationEditPage", () => {
   const axiosMock = new AxiosMockAdapter(axios);
 
   beforeEach(() => {
+    mockToast.mockClear();
     axiosMock.reset();
     axiosMock
       .onGet("/api/currentUser")
@@ -47,7 +54,8 @@ describe("UCSBOrganizationEditPage", () => {
   });
 
   test("loads the record into the form and keeps its code read-only", async () => {
-    renderPage();
+    const queryClient = new QueryClient();
+    renderPage(queryClient);
 
     expect(await screen.findByLabelText("Organization Code")).toHaveValue(
       "ORG001",
@@ -69,16 +77,21 @@ describe("UCSBOrganizationEditPage", () => {
         params: { orgCode: "ORG001" },
       }),
     );
+    expect(
+      queryClient.getQueryState(["/api/UCSBOrganization", "ORG001"]),
+    ).toMatchObject({ status: "success" });
   });
 
   test("saves valid changes and returns to the index page", async () => {
+    const queryClient = new QueryClient();
+    const invalidateQueries = vi.spyOn(queryClient, "invalidateQueries");
     axiosMock.onPut("/api/UCSBOrganization").reply(200, {
       orgCode: "ORG001",
       orgTranslationShort: "Gaming",
       orgTranslation: "Gaucho Gaming Society",
       inactive: true,
     });
-    renderPage();
+    renderPage(queryClient);
     await screen.findByLabelText("Organization Code");
 
     fireEvent.change(screen.getByLabelText("Short Organization Name"), {
@@ -99,6 +112,10 @@ describe("UCSBOrganizationEditPage", () => {
       inactive: true,
     });
     expect(await screen.findByText("Index destination")).toBeInTheDocument();
+    expect(mockToast).toHaveBeenCalledWith("UCSBOrganization updated: ORG001");
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: ["/api/UCSBOrganization/all"],
+    });
   });
 
   test("shows validation errors without saving", async () => {

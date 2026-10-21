@@ -22,9 +22,9 @@ vi.mock("react-router", async (importOriginal) => ({
   },
 }));
 
-const renderPage = () =>
+const renderPage = (queryClient = new QueryClient()) =>
   render(
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={["/ucsborganization/create"]}>
         <UCSBOrganizationCreatePage />
       </MemoryRouter>
@@ -58,13 +58,15 @@ describe("UCSBOrganizationCreatePage", () => {
   });
 
   test("posts valid values and returns to the index page", async () => {
+    const queryClient = new QueryClient();
+    const invalidateQueries = vi.spyOn(queryClient, "invalidateQueries");
     axiosMock.onPost("/api/UCSBOrganization/post").reply(200, {
       orgCode: "ORG004",
       orgTranslationShort: "Robotics",
       orgTranslation: "UCSB Robotics Club",
       inactive: true,
     });
-    renderPage();
+    renderPage(queryClient);
 
     fireEvent.change(screen.getByLabelText("Organization Code"), {
       target: { value: "ORG004" },
@@ -91,6 +93,9 @@ describe("UCSBOrganizationCreatePage", () => {
     expect(mockToast).toHaveBeenCalledWith(
       "New UCSBOrganization created: ORG004",
     );
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: ["/api/UCSBOrganization/all"],
+    });
   });
 
   test("shows validation errors without posting or leaving the page", async () => {

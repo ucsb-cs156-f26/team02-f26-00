@@ -7,6 +7,12 @@ import UCSBOrganizationTable from "main/components/UCSBOrganization/UCSBOrganiza
 import { ucsbOrganizationFixtures } from "fixtures/ucsbOrganizationFixtures";
 import { currentUserFixtures } from "fixtures/currentUserFixtures";
 
+const mockToast = vi.fn();
+vi.mock("react-toastify", async (importOriginal) => ({
+  ...(await importOriginal()),
+  toast: (message) => mockToast(message),
+}));
+
 const mockedNavigate = vi.fn();
 vi.mock("react-router", async () => {
   const originalModule = await vi.importActual("react-router");
@@ -24,9 +30,13 @@ const expectedHeaders = [
   "Inactive",
 ];
 
-const renderTable = (organizations, currentUser) =>
+const renderTable = (
+  organizations,
+  currentUser,
+  queryClient = new QueryClient(),
+) =>
   render(
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryClientProvider client={queryClient}>
       <MemoryRouter>
         <UCSBOrganizationTable
           organizations={organizations}
@@ -37,7 +47,10 @@ const renderTable = (organizations, currentUser) =>
   );
 
 describe("UCSBOrganizationTable", () => {
-  beforeEach(() => mockedNavigate.mockClear());
+  beforeEach(() => {
+    mockedNavigate.mockClear();
+    mockToast.mockClear();
+  });
 
   test("renders an empty table with all organization headers", () => {
     renderTable([], currentUserFixtures.userOnly);
@@ -100,6 +113,8 @@ describe("UCSBOrganizationTable", () => {
 
   test("deletes the selected organization using its code", async () => {
     const axiosMock = new AxiosMockAdapter(axios);
+    const queryClient = new QueryClient();
+    const invalidateQueries = vi.spyOn(queryClient, "invalidateQueries");
     axiosMock
       .onDelete("/api/UCSBOrganization")
       .reply(200, { message: "Organization deleted" });
@@ -107,6 +122,7 @@ describe("UCSBOrganizationTable", () => {
     renderTable(
       ucsbOrganizationFixtures.threeOrganizations,
       currentUserFixtures.adminUser,
+      queryClient,
     );
     fireEvent.click(
       screen.getByTestId(`${testId}-cell-row-1-col-Delete-button`),
@@ -114,6 +130,12 @@ describe("UCSBOrganizationTable", () => {
 
     await waitFor(() => expect(axiosMock.history.delete).toHaveLength(1));
     expect(axiosMock.history.delete[0].params).toEqual({ orgCode: "ORG002" });
+    await waitFor(() =>
+      expect(mockToast).toHaveBeenCalledWith("Organization deleted"),
+    );
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: ["/api/UCSBOrganization/all"],
+    });
     axiosMock.restore();
   });
 });

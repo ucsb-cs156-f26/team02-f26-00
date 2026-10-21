@@ -8,7 +8,7 @@ export default function UCSBOrganizationIndexPage() {
   const currentUser = useCurrentUser();
   const { data: organizations } = useBackend(
     ["/api/UCSBOrganization/all"],
-    { method: "GET", url: "/api/UCSBOrganization/all" },
+    { url: "/api/UCSBOrganization/all" },
     [],
   );
 
